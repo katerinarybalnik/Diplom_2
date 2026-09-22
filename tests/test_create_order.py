@@ -1,14 +1,14 @@
-import uuid
-
+from faker import Faker
 import allure
 import requests
 
 from urls import CREATE_USER_URL, CREATE_ORDER_URL, INGREDIENTS_URL
 
+fake = Faker()
 
 @allure.title("Создание заказа с авторизацией")
 def test_create_order_with_authorization():
-    user = {"email": f"test_{uuid.uuid4().hex}@example.com",
+    user = {"email": fake.email(),
         "password": "Password123","name": "Test User"}
 
     registration = requests.post(CREATE_USER_URL, json=user)
@@ -45,9 +45,6 @@ def test_create_order_without_ingredients():
 
 @allure.title("Создание заказа с неверным хешем ингредиента")
 def test_create_order_with_invalid_ingredient():
-    response = requests.post(
-        CREATE_ORDER_URL,
-        json={"ingredients": ["invalid_ingredient_hash"]}
-    )
+    response = requests.post(CREATE_ORDER_URL,json={"ingredients": ["invalid_ingredient_hash"]})
 
     assert response.status_code == 500

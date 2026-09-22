@@ -1,15 +1,16 @@
-import uuid
-
+from faker import Faker
 import allure
 import requests
 
 from urls import CREATE_USER_URL
 
+fake = Faker()
+
 
 @allure.title("Создание уникального пользователя")
 def test_create_unique_user():
     payload = {
-        "email": f"test_{uuid.uuid4().hex}@example.com",
+        "email": fake.email(),
         "password": "Password123",
         "name": "Test User"
     }
@@ -22,7 +23,7 @@ def test_create_unique_user():
 @allure.title("Создание пользователя, который уже зарегистрирован")
 def test_create_existing_user():
     payload = {
-        "email": f"test_{uuid.uuid4().hex}@example.com",
+        "email": fake.email(),
         "password": "Password123",
         "name": "Test User"
     }
@@ -37,7 +38,7 @@ def test_create_existing_user():
 @allure.title("Создание пользователя без пароля")
 def test_create_user_without_password():
     payload = {
-        "email": f"test_{uuid.uuid4().hex}@example.com",
+        "email": fake.email(),
         "name": "Test User"
     }
 
