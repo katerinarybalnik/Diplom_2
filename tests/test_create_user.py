@@ -28,7 +28,9 @@ def test_create_existing_user():
         "name": "Test User"
     }
 
-    requests.post(CREATE_USER_URL, json=payload)
+    registration = requests.post(CREATE_USER_URL, json=payload)
+    assert registration.status_code == 200
+
     response = requests.post(CREATE_USER_URL, json=payload)
 
     assert response.status_code == 403

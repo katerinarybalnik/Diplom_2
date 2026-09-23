@@ -12,6 +12,7 @@ def test_create_order_with_authorization():
         "password": "Password123","name": "Test User"}
 
     registration = requests.post(CREATE_USER_URL, json=user)
+    assert registration.status_code == 200
     token = registration.json()["accessToken"]
 
     ingredients_response = requests.get(INGREDIENTS_URL)
