@@ -1,3 +1,4 @@
+
 from faker import Faker
 import allure
 import requests
@@ -7,45 +8,47 @@ from urls import CREATE_USER_URL
 fake = Faker()
 
 
-@allure.title("Создание уникального пользователя")
-def test_create_unique_user():
-    payload = {
-        "email": fake.email(),
-        "password": "Password123",
-        "name": "Test User"
-    }
+class TestCreateUser:
 
-    response = requests.post(CREATE_USER_URL, json=payload)
+    @allure.title("Создание уникального пользователя")
+    def test_create_unique_user(self):
+        payload = {
+            "email": fake.email(),
+            "password": "Password123",
+            "name": "Test User"
+        }
 
-    assert response.status_code == 200
-    assert response.json()["success"] is True
+        response = requests.post(CREATE_USER_URL, json=payload)
 
-@allure.title("Создание пользователя, который уже зарегистрирован")
-def test_create_existing_user():
-    payload = {
-        "email": fake.email(),
-        "password": "Password123",
-        "name": "Test User"
-    }
+        assert response.status_code == 200
+        assert response.json()["success"] is True
 
-    registration = requests.post(CREATE_USER_URL, json=payload)
-    assert registration.status_code == 200
+    @allure.title("Создание пользователя, который уже зарегистрирован")
+    def test_create_existing_user(self):
+        payload = {
+            "email": fake.email(),
+            "password": "Password123",
+            "name": "Test User"
+        }
 
-    response = requests.post(CREATE_USER_URL, json=payload)
+        registration = requests.post(CREATE_USER_URL, json=payload)
+        assert registration.status_code == 200
 
-    assert response.status_code == 403
-    assert response.json()["success"] is False
-    assert response.json()["message"] == "User already exists"
+        response = requests.post(CREATE_USER_URL, json=payload)
 
-@allure.title("Создание пользователя без пароля")
-def test_create_user_without_password():
-    payload = {
-        "email": fake.email(),
-        "name": "Test User"
-    }
+        assert response.status_code == 403
+        assert response.json()["success"] is False
+        assert response.json()["message"] == "User already exists"
 
-    response = requests.post(CREATE_USER_URL, json=payload)
+    @allure.title("Создание пользователя без пароля")
+    def test_create_user_without_password(self):
+        payload = {
+            "email": fake.email(),
+            "name": "Test User"
+        }
 
-    assert response.status_code == 403
-    assert response.json()["success"] is False
-    assert response.json()["message"] == "Email, password and name are required fields"
+        response = requests.post(CREATE_USER_URL, json=payload)
+
+        assert response.status_code == 403
+        assert response.json()["success"] is False
+        assert response.json()["message"] == "Email, password and name are required fields"
